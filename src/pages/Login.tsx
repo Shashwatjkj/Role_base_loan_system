@@ -1,87 +1,61 @@
 import { useState } from 'react';
+import { loginUser } from '../api';
+import { useNavigate } from 'react-router-dom';
+import './Login.css'; // ⬅️ Import the CSS file
 
-// Types
-interface LoginResponse {
-  token: string;
-  role: 'admin' | 'verifier';
-}
-
-// Mock functions for demonstration
-const loginUser = async (username: string, password: string): Promise<LoginResponse> => {
-  // Simulate API call
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (username === 'admin' && password === 'admin') {
-        resolve({ token: 'mock-token', role: 'admin' });
-      } else if (username === 'verifier' && password === 'verifier') {
-        resolve({ token: 'mock-token', role: 'verifier' });
-      } else {
-        reject(new Error('Invalid credentials'));
-      }
-    }, 1000);
-  });
-};
-
-const Login: React.FC = () => {
+const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = async (): Promise<void> => {
-    setIsLoading(true);
+  const handleLogin = async () => {
     try {
-    const {  role } = await loginUser(username, password);
-      
-      // In a real app, you'd use localStorage here
-      // localStorage.setItem('token', token);
-      // localStorage.setItem('role', role);
+      const { token, role } = await loginUser(username, password);
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
 
       if (role === 'admin') {
-        alert('Login successful! Redirecting to admin panel...');
+        navigate('/admin');
       } else if (role === 'verifier') {
-        alert('Login successful! Redirecting to verifier panel...');
+        navigate('/verifier');
       } else {
         alert('Unknown role');
       }
     } catch (err) {
       alert('Invalid credentials');
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
-    <div className="h-screen flex justify-center items-center bg-gray-100">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
-        <h2 className="mb-2 text-center text-2xl font-bold text-gray-800">
-          Welcome Back
-        </h2>
-        <p className="text-center mb-6 text-gray-500 text-sm">
-          Please log in to continue
-        </p>
-        <p className="text-center mb-4 text-xs text-gray-400">
-          Demo: admin/admin or verifier/verifier
-        </p>
+    <div id="login-container" className="login-container">
+      <div id="login-card" className="login-card">
+        <h2 id="login-heading" className="login-heading">Welcome Back</h2>
+        <p id="login-subheading" className="login-subheading">Please log in to continue</p>
+
         <input
+          id="username-input"
+          className="login-input"
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
-          className="w-full p-3 mb-4 rounded-lg border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          onChange={(e) => setUsername(e.target.value)}
         />
+
         <input
+          id="password-input"
+          className="login-input"
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
-          className="w-full p-3 mb-4 rounded-lg border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          onChange={(e) => setPassword(e.target.value)}
         />
-        <button 
-          onClick={handleLogin} 
-          disabled={isLoading}
-          className="w-full p-3 rounded-lg border-none bg-blue-600 text-white text-base cursor-pointer transition-colors duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+
+        <button
+          id="login-button"
+          className="login-button"
+          onClick={handleLogin}
         >
-          {isLoading ? 'Logging in...' : 'Login'}
+          Login
         </button>
       </div>
     </div>
