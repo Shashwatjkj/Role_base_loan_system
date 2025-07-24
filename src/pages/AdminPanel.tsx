@@ -567,13 +567,13 @@ const AdminPanel: React.FC = () => {
   const handleAddAdmin = async (): Promise<void> => {
     if (!token || !newUsername || !newPassword) return;
     try {
-      await addAdmin(newUsername, newPassword, token);
+      await addAdmin(newUsername, newPassword, token,'admin');
       alert('New admin added');
       setNewUsername('');
       setNewPassword('');
       setShowAddAdmin(false);
     } catch (err) {
-      alert('Failed to add admin');
+      alert(`${newPassword}`);
     }
   };
 
@@ -804,7 +804,7 @@ const AdminPanel: React.FC = () => {
                 onBlur={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#d1d5db'}
               />
               <input
-                type="password"
+                type="Password"
                 placeholder="Password"
                 value={newPassword}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}

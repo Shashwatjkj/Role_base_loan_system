@@ -50,11 +50,12 @@ export const updateApplicationStatus = async (
 export const addAdmin = async (
   username: string,
   password: string,
-  token: string
+  token: string,
+  role:string
 ) => {
   const res = await api.post(
     '/admin/add',
-    { username, password },
+    { username, password,role },
     {
       headers: {
         Authorization: `Bearer ${token}`,
