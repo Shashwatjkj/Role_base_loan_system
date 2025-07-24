@@ -548,6 +548,7 @@ const AdminPanel: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [newUsername, setNewUsername] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
+  const [newRole,setNewRole] =useState<string>('');
   const [showAddAdmin, setShowAddAdmin] = useState<boolean>(false);
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
@@ -567,7 +568,7 @@ const AdminPanel: React.FC = () => {
   const handleAddAdmin = async (): Promise<void> => {
     if (!token || !newUsername || !newPassword) return;
     try {
-      await addAdmin(newUsername, newPassword, token,'admin');
+      await addAdmin(newUsername, newPassword, token,newRole);
       alert('New admin added');
       setNewUsername('');
       setNewPassword('');
@@ -788,55 +789,78 @@ const AdminPanel: React.FC = () => {
             </h3>
             <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
               <input
-                type="text"
-                placeholder="Username"
-                value={newUsername}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUsername(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  outline: 'none'
-                }}
-                onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#3b82f6'}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#d1d5db'}
-              />
-              <input
-                type="Password"
-                placeholder="Password"
-                value={newPassword}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
-                style={{
-                  flex: 1,
-                  padding: '8px 12px',
-                  border: '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  fontSize: '14px',
-                  outline: 'none'
-                }}
-                onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#3b82f6'}
-                onBlur={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#d1d5db'}
-              />
-              <button
-                onClick={handleAddAdmin}
-                data-original-color="green"
-                style={{
-                  padding: '8px 24px',
-                  backgroundColor: '#10b981',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: '500'
-                }}
-                onMouseOver={handleMouseOver}
-                onMouseOut={handleMouseOut}
-              >
-                Add Admin
-              </button>
+  type="text"
+  placeholder="Username"
+  value={newUsername}
+  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewUsername(e.target.value)}
+  style={{
+    flex: 1,
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    outline: 'none',
+    marginBottom: '10px'
+  }}
+  onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#3b82f6'}
+  onBlur={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#d1d5db'}
+/>
+
+<input
+  type="password"
+  placeholder="Password"
+  value={newPassword}
+  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value)}
+  style={{
+    flex: 1,
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    outline: 'none',
+    marginBottom: '10px'
+  }}
+  onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#3b82f6'}
+  onBlur={(e: React.FocusEvent<HTMLInputElement>) => e.target.style.borderColor = '#d1d5db'}
+/>
+
+<select
+  value={newRole}
+  onChange={(e) => setNewRole(e.target.value)}
+  style={{
+    flex: 1,
+    padding: '8px 12px',
+    border: '1px solid #d1d5db',
+    borderRadius: '6px',
+    fontSize: '14px',
+    outline: 'none',
+    marginBottom: '10px'
+  }}
+>
+  <option value="">Select Role</option>
+  <option value="admin">Admin</option>
+  <option value="verifier">Verifier</option>
+</select>
+
+<button
+  onClick={handleAddAdmin}
+  data-original-color="green"
+  style={{
+    padding: '8px 24px',
+    backgroundColor: '#10b981',
+    color: 'white',
+    border: 'none',
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '500'
+  }}
+  onMouseOver={handleMouseOver}
+  onMouseOut={handleMouseOut}
+>
+  Add User
+</button>
+
               <button
                 onClick={() => setShowAddAdmin(false)}
                 data-original-color="gray"
