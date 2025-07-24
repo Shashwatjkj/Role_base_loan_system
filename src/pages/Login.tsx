@@ -30,7 +30,7 @@ const Login: React.FC = () => {
   const handleLogin = async (): Promise<void> => {
     setIsLoading(true);
     try {
-      const { token, role } = await loginUser(username, password);
+    const {  role } = await loginUser(username, password);
       
       // In a real app, you'd use localStorage here
       // localStorage.setItem('token', token);
