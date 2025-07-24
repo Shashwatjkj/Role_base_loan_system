@@ -1,109 +1,91 @@
 import { useState } from 'react';
-import { loginUser } from '../api';
-import { useNavigate } from 'react-router-dom';
-const styles = {
-  container: {
-    height: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#f4f4f4',
-  },
-  card: {
-    backgroundColor: '#fff',
-    padding: '2rem',
-    borderRadius: '12px',
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-    width: '100%',
-    maxWidth: '400px',
-    boxSizing: 'border-box',
-  },
-  heading: {
-    marginBottom: '0.5rem',
-    textAlign: 'center',
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  subheading: {
-    textAlign: 'center',
-    marginBottom: '1.5rem',
-    color: '#777',
-    fontSize: '0.9rem',
-  },
-  input: {
-    width: '100%',
-    padding: '0.75rem',
-    marginBottom: '1rem',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
-    fontSize: '1rem',
-    boxSizing: 'border-box',
-  },
-  button: {
-    width: '100%',
-    padding: '0.75rem',
-    borderRadius: '8px',
-    border: 'none',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
-  },
+
+// Types
+interface LoginResponse {
+  token: string;
+  role: 'admin' | 'verifier';
+}
+
+// Mock functions for demonstration
+const loginUser = async (username: string, password: string): Promise<LoginResponse> => {
+  // Simulate API call
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (username === 'admin' && password === 'admin') {
+        resolve({ token: 'mock-token', role: 'admin' });
+      } else if (username === 'verifier' && password === 'verifier') {
+        resolve({ token: 'mock-token', role: 'verifier' });
+      } else {
+        reject(new Error('Invalid credentials'));
+      }
+    }, 1000);
+  });
 };
 
-
-const Login = () => {
+const Login: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
+    setIsLoading(true);
     try {
       const { token, role } = await loginUser(username, password);
-      localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
+      
+      // In a real app, you'd use localStorage here
+      // localStorage.setItem('token', token);
+      // localStorage.setItem('role', role);
 
       if (role === 'admin') {
-        navigate('/admin');
+        alert('Login successful! Redirecting to admin panel...');
       } else if (role === 'verifier') {
-        navigate('/verifier');
+        alert('Login successful! Redirecting to verifier panel...');
       } else {
         alert('Unknown role');
       }
     } catch (err) {
       alert('Invalid credentials');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h2 style={styles.heading}>Welcome Back</h2>
-        <p style={styles.subheading}>Please log in to continue</p>
+    <div className="h-screen flex justify-center items-center bg-gray-100">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
+        <h2 className="mb-2 text-center text-2xl font-bold text-gray-800">
+          Welcome Back
+        </h2>
+        <p className="text-center mb-6 text-gray-500 text-sm">
+          Please log in to continue
+        </p>
+        <p className="text-center mb-4 text-xs text-gray-400">
+          Demo: admin/admin or verifier/verifier
+        </p>
         <input
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          style={styles.input}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+          className="w-full p-3 mb-4 rounded-lg border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={styles.input}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+          className="w-full p-3 mb-4 rounded-lg border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
-        <button onClick={handleLogin} style={styles.button}>
-          Login
+        <button 
+          onClick={handleLogin} 
+          disabled={isLoading}
+          className="w-full p-3 rounded-lg border-none bg-blue-600 text-white text-base cursor-pointer transition-colors duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {isLoading ? 'Logging in...' : 'Login'}
         </button>
       </div>
     </div>
   );
 };
-
-
 
 export default Login;
