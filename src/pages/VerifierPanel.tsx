@@ -569,7 +569,6 @@ const VerifierPanel: React.FC = () => {
   const navigate = useNavigate();
   const [applications, setApplications] = useState<Application[]>([]);
   const token = localStorage.getItem('token');
-  const role = localStorage.getItem('role');
 
   const fetchApps = async (): Promise<void> => {
     if (!token) return;
