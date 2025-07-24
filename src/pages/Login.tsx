@@ -26,6 +26,10 @@ const Login = () => {
     }
   };
 
+  const handleApplyRedirect = () => {
+    navigate('/apply');
+  };
+
   return (
     <div id="login-container" className="login-container">
       <div id="login-card" className="login-card">
@@ -57,6 +61,18 @@ const Login = () => {
         >
           Login
         </button>
+
+        {/* Apply for Loan Section */}
+        <div className="apply-section">
+          <p>New here?</p>
+          <button
+            id="apply-button"
+            className="apply-button"
+            onClick={handleApplyRedirect}
+          >
+            Apply for Loan
+          </button>
+        </div>
       </div>
     </div>
   );
